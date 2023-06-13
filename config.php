@@ -5,8 +5,8 @@ require 'environment.php';
 $config = array();
 
 if(ENVIRONMENT == 'development'){
-	define("BASE_URL", "http://localhost/projects/financas/");
-	$config['dbname'] = 'financas';
+	define("BASE_URL", "http://localhost/projects/finance/");
+	$config['dbname'] = 'finance';
 	$config['host'] = 'localhost';
 	$config['dbuser'] = 'root';
 	$config['dbpass'] = '';
