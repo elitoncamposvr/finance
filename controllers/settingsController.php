@@ -26,38 +26,38 @@ class settingsController extends controller{
 		}
 	}
 
-	public function users(){
-		$data = array();
-		$u = new Users();
-		$u->setLoggedUser();
-		$company = new Companies($u->getCompany());
-		$data['company_name'] = $company->getName();
-		$data['user_email'] = $u->getEmail();
+	// public function users(){
+	// 	$data = array();
+	// 	$u = new Users();
+	// 	$u->setLoggedUser();
+	// 	$company = new Companies($u->getCompany());
+	// 	$data['company_name'] = $company->getName();
+	// 	$data['user_email'] = $u->getEmail();
 
-		if($u->hasPermission('settings')){
+	// 	if($u->hasPermission('settings')){
 			
 			
-			$this->loadTemplate('settings_users', $data);
-		} else {
-			header("Location: ".BASE_URL);
-		}
-	}
+	// 		$this->loadTemplate('settings_users', $data);
+	// 	} else {
+	// 		header("Location: ".BASE_URL);
+	// 	}
+	// }
 
-	public function company(){
-		$data = array();
-		$u = new Users();
-		$u->setLoggedUser();
-		$company = new Companies($u->getCompany());
-		$data['company_name'] = $company->getName();
-		$data['user_email'] = $u->getEmail();
+	// public function company(){
+	// 	$data = array();
+	// 	$u = new Users();
+	// 	$u->setLoggedUser();
+	// 	$company = new Companies($u->getCompany());
+	// 	$data['company_name'] = $company->getName();
+	// 	$data['user_email'] = $u->getEmail();
 
-		if($u->hasPermission('settings')){
+	// 	if($u->hasPermission('settings')){
 			
 			
-			$this->loadTemplate('settings_company', $data);
-		} else {
-			header("Location: ".BASE_URL);
-		}
-	}
+	// 		$this->loadTemplate('settings_company', $data);
+	// 	} else {
+	// 		header("Location: ".BASE_URL);
+	// 	}
+	// }
 	
 }

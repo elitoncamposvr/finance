@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+    @apply font-poppins w-full h-screen flex justify-center items-center bg-primary;
+}
+
+input[type="text"],
+input[type="password"] {
+    @apply outline-0 p-5 rounded-lg bg-slate-950 text-white;
+}
+
+button[type="submit"] {
+    @apply w-full py-4 outline-0 rounded-lg bg-white text-center font-semibold;
+}
+
+.field {
+    @apply w-full my-5;
+}
+
+.title-login {
+    @apply w-full my-7 text-center text-white text-lg;
+}
+
+.reset-password {
+    @apply w-full text-right text-sm text-white;
+}
+
+.warning{
+    @apply border-2 border-red-500 text-red-300 rounded-lg text-center p-4;
+}

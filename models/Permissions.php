@@ -21,12 +21,12 @@ class Permissions extends model{
 
 			$params = $row['params'];
 
-			$sql = $this->db->prepare("SELECT name FROM permission_params WHERE id IN ($params)");
+			$sql = $this->db->prepare("SELECT permission_name FROM permission_params WHERE id IN ($params)");
 			$sql->execute();
 
 			if($sql->rowCount() > 0){
 				foreach($sql->fetchAll() as $item) {
-					$this->permissions[] = $item['name'];
+					$this->permissions[] = $item['permission_name'];
 				}
 
 			}

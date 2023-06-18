@@ -11,25 +11,25 @@
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/login.css" />
 </head>
 
-<body class="font-poppins w-full h-screen flex justify-center items-center bg-gray-900">
+<body>
     <form method="post">
         <div class="w-96">
-            <div class="w-full my-7 text-center text-white text-lg">
+            <div class="title-login">
                 Faça seu login para continuar
             </div>
             <?php if (isset($error) && !empty($error)) : ?>
                 <div class="warning"><?php echo $error; ?></div>
             <?php endif; ?>
-            <div class="w-full my-5">
+            <div class="field">
                 <input type="text" name="email" id="email" class="w-full" placeholder="Informe seu e-mail">
             </div>
-            <div class="w-full my-5">
+            <div class="field">
                 <input type="password" name="password" id="password" class="w-full" placeholder="Sua Senha">
             </div>
-            <div class="w-full my-5">
+            <div class="field">
                 <button type="submit">Efetuar Login</button>
             </div>
-            <div class="w-full text-right text-sm text-white">
+            <div class="reset-password">
                 <a href="#">Esqueceu sua senha?</a>
             </div>
         </div>

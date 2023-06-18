@@ -1,12 +1,13 @@
 <?php
-class Schools extends model
+class Customers extends model
 {
 
-    public function getList($offset)
+    public function getList($offset, $id_company)
     {
         $array = array();
 
-        $sql = $this->db->prepare("SELECT * FROM schools ORDER BY school_name ASC LIMIT $offset, 15");
+        $sql = $this->db->prepare("SELECT * FROM customers WHERE id_company = :id_company ORDER BY customer_name ASC LIMIT $offset, 2");
+        $sql->bindValue(':id_company', $id_company);
         $sql->execute();
 
         if ($sql->rowCount() > 0) {
@@ -16,11 +17,12 @@ class Schools extends model
         return $array;
     }
 
-    public function getListAll()
+    public function getListAll($id_company)
     {
         $array = array();
 
-        $sql = $this->db->prepare("SELECT * FROM schools ORDER BY school_name ASC");
+        $sql = $this->db->prepare("SELECT * FROM customers WHERE id_company = :id_company ORDER BY customer_name ASC");
+        $sql->bindValue(':id_company', $id_company);
         $sql->execute();
 
         if ($sql->rowCount() > 0) {
@@ -30,12 +32,13 @@ class Schools extends model
         return $array;
     }
 
-    public function getInfo($id)
+    public function getInfo($id, $id_company)
     {
         $array = array();
 
-        $sql = $this->db->prepare("SELECT * FROM schools WHERE id = :id");
+        $sql = $this->db->prepare("SELECT * FROM customers WHERE id = :id AND id_company = :id_company");
         $sql->bindValue(":id", $id);
+        $sql->bindValue(":id_company", $id_company);
         $sql->execute();
 
         if ($sql->rowCount() > 0) {
@@ -45,11 +48,12 @@ class Schools extends model
         return $array;
     }
 
-    public function getCountSchool()
+    public function getCountSchool($id_company)
     {
         $r = 0;
 
-        $sql = $this->db->prepare("SELECT COUNT(*) as pd FROM schools");
+        $sql = $this->db->prepare("SELECT COUNT(*) as pd FROM customers WHERE id_company = :id_company");
+        $sql->bindValue(':id_company',$id_company);
         $sql->execute();
         $row = $sql->fetch();
 

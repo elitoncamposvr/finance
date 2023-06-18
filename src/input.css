@@ -5,16 +5,58 @@
 @tailwind utilities;
 
 
-
-input[type="text"],
-input[type="password"] {
-    @apply py-4 px-5 rounded-lg bg-slate-950 text-lg;
+body {
+    @apply font-poppins flex bg-slate-100;
 }
 
-button[type="submit"] {
-    @apply w-full py-4 rounded-lg bg-white text-base font-semibold;
+aside {
+    @apply w-64 fixed left-0 top-0 h-screen bg-primary text-white text-sm;
 }
 
-.warning {
-    @apply w-full p-4 text-center border-2 rounded-lg text-white border-red-500;
+.logo {
+    @apply text-2xl text-center py-5;
+}
+
+.link-menu {
+    @apply ml-4 px-2 py-3 rounded-l-lg flex items-center;
+}
+
+.link-menu--active {
+    @apply bg-secondary;
+}
+
+.icon-menu {
+    @apply w-8;
+}
+
+.aside-footer {
+    @apply w-full absolute bottom-0 py-3 flex justify-between;
+}
+
+main {
+    @apply flex-1 ml-64 px-3;
+}
+
+.btn {
+    @apply outline-0  px-4 py-2 border-2 border-secondary rounded-lg text-sm;
+}
+
+.btn-secondary {
+    @apply outline-0  px-4 py-2 rounded-lg bg-secondary text-white text-sm;
+}
+
+.warnings{
+    @apply h-64 w-full flex justify-center flex-col items-center;
+}
+
+.table-header{
+    @apply flex py-2 text-sm font-semibold bg-slate-300 rounded-md px-1.5;
+}
+
+.table-data{
+    @apply flex p-2.5 text-sm uppercase px-1.5 border-b border-slate-200;
+}
+
+.pagination{
+    @apply flex w-full justify-center items-center py-3;
 }

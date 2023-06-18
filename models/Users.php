@@ -18,7 +18,7 @@ class Users extends model
 	public function doLogin($email, $password)
 	{
 
-		$sql = $this->db->prepare("SELECT * FROM users WHERE email = :email AND password = :password AND status = 1");
+		$sql = $this->db->prepare("SELECT * FROM users WHERE email = :email AND password = :password");
 		$sql->bindValue(':email', $email);
 		$sql->bindValue(':password', md5($password));
 
@@ -48,7 +48,7 @@ class Users extends model
 			if ($sql->rowCount() > 0) {
 				$this->userInfo = $sql->fetch();
 				$this->permissions = new Permissions();
-				$this->permissions->setGroup($this->userInfo['id_group']);
+				$this->permissions->setGroup($this->userInfo['id_group'], $this->userInfo['id_company']);
 			}
 		}
 	}
@@ -58,16 +58,33 @@ class Users extends model
 		unset($_SESSION['ccUser']);
 	}
 
-	public function hasPermission($name)
+	public function hasPermission($permission_name)
 	{
-		return $this->permissions->hasPermission($name);
+		return $this->permissions->hasPermission($permission_name);
 	}
 
+	public function getCompany()
+	{
+		if (isset($this->userInfo['id_company'])) {
+			return $this->userInfo['id_company'];
+		} else {
+			return 0;
+		}
+	}
 
 	public function getEmail()
 	{
 		if (isset($this->userInfo['email'])) {
 			return $this->userInfo['email'];
+		} else {
+			return '';
+		}
+	}
+
+	public function getName()
+	{
+		if (isset($this->userInfo['name_user'])) {
+			return $this->userInfo['name_user'];
 		} else {
 			return '';
 		}
@@ -82,21 +99,13 @@ class Users extends model
 		}
 	}
 
-	public function getInfo($id)
+	public function getInfo($id, $id_company)
 	{
 		$array = array();
 
-		$sql = $this->db->prepare("
-			SELECT 
-				users.*,
-				schools.school_name
-			FROM 
-				users 
-			LEFT JOIN
-				schools ON users.school_id = schools.id 
-			WHERE 
-				users.id = :id");
+		$sql = $this->db->prepare("SELECT * FROM users WHERE id = :id AND id_company = :id_company");
 		$sql->bindValue(":id", $id);
+		$sql->bindValue(":id_company", $id_company);
 		$sql->execute();
 
 		if ($sql->rowCount() > 0) {
@@ -121,22 +130,23 @@ class Users extends model
 		}
 	}
 
-	public function getList()
+	public function getList($id_company)
 	{
 		$array = array();
 
 		$sql = $this->db->prepare("
 			SELECT
-				users.*,
-				permission_groups.name as permission_name,
-				schools.school_name as school_name
+				users.id,
+				users.email,
+				users.name_user,
+				permission_groups.name
 			FROM 
 				users
 			LEFT JOIN 
 				permission_groups ON permission_groups.id = users.id_group
-			LEFT JOIN 
-				schools ON schools.id = users.school_id
-				");
+			WHERE 
+				users.id_company = :id_company");
+		$sql->bindValue(":id_company", $id_company);
 		$sql->execute();
 
 		if ($sql->rowCount() > 0) {
@@ -145,11 +155,12 @@ class Users extends model
 
 		return $array;
 	}
-	public function getListAll()
+	public function getListAll($id_company)
 	{
 		$array = array();
 
-		$sql = $this->db->prepare("SELECT * FROM users");
+		$sql = $this->db->prepare("SELECT * FROM users WHERE id_company = :id_company");
+		$sql->bindValue(":id_company", $id_company);
 		$sql->execute();
 
 		if ($sql->rowCount() > 0) {
@@ -159,7 +170,7 @@ class Users extends model
 		return $array;
 	}
 
-	public function create($name_user, $email, $pass, $school_id)
+	public function add($name_user, $email, $pass, $group, $id_company)
 	{
 		$sql = $this->db->prepare("SELECT COUNT(*) as c FROM users WHERE email = :email");
 		$sql->bindValue(":email", $email);
@@ -167,11 +178,12 @@ class Users extends model
 		$row = $sql->fetch();
 
 		if ($row['c'] == '0') {
-			$sql = $this->db->prepare("INSERT INTO users SET name_user = :name_user,  email = :email, password = :password, school_id = :school_id, id_group = 2");
+			$sql = $this->db->prepare("INSERT INTO users SET name_user = :name_user,  email = :email, password = :password, id_group = :id_group, id_company = :id_company");
 			$sql->bindValue(":name_user", $name_user);
 			$sql->bindValue(":email", $email);
 			$sql->bindValue(":password", md5($pass));
-			$sql->bindValue(":school_id", $school_id);
+			$sql->bindValue(":id_group", $group);
+			$sql->bindValue(":id_company", $id_company);
 			$sql->execute();
 
 			return '1';
@@ -180,35 +192,29 @@ class Users extends model
 		}
 	}
 
-	public function update($email, $name_user, $pass, $school_id, $id)
+	public function edit($name_user, $pass, $group, $id, $id_company)
 	{
-		$sql = $this->db->prepare("UPDATE users SET email = :email, name_user = :name_user, school_id = :school_id WHERE id = :id");
-		$sql->bindValue(":email", $email);
+		$sql = $this->db->prepare("UPDATE users SET name_user = :name_user, id_group = :id_group WHERE id = :id AND id_company = :id_company");
 		$sql->bindValue(":name_user", $name_user);
-		$sql->bindValue(":school_id", $school_id);
+		$sql->bindValue(":id_group", $group);
 		$sql->bindValue("id", $id);
+		$sql->bindValue(":id_company", $id_company);
 		$sql->execute();
 
 		if (!empty($pass)) {
-			$sql = $this->db->prepare("UPDATE users SET password = :password WHERE id = :id");
+			$sql = $this->db->prepare("UPDATE users SET password = :password WHERE id = :id AND id_company = :id_company");
 			$sql->bindValue(":password", md5($pass));
 			$sql->bindValue(":id", $id);
+			$sql->bindValue("id_company", $id_company);
 			$sql->execute();
 		}
 	}
 
-	public function destroy($id)
+	public function delete($id, $id_company)
 	{
-		$sql = $this->db->prepare("DELETE FROM users WHERE id = :id");
+		$sql = $this->db->prepare("DELETE FROM users WHERE id = :id AND id_company = :id_company");
 		$sql->bindValue(":id", $id);
-		$sql->execute();
-	}
-
-	public function isBlock($id, $status)
-	{
-		$sql = $this->db->prepare("UPDATE users SET status = :status WHERE id = :id");
-		$sql->bindValue(":status", $status);
-		$sql->bindValue(":id", $id);
+		$sql->bindValue(':id_company', $id_company);
 		$sql->execute();
 	}
 }

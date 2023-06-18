@@ -17,11 +17,8 @@ class homeController extends controller
         $data = array();
         $u = new Users();
 		$u->setLoggedUser();
-        $schools = new Schools();
-
-        $data['schools_total'] = $schools->getCountSchool();
-        $data['students_classes_total'] = $schools->getCountStudentsClasses();
-        $data['students_total'] = $schools->getCountStudents();
+		$data['user_name'] = $u->getName();
+        
         $this->loadTemplate('home', $data);
     }
 
